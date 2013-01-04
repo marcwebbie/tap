@@ -1,6 +1,3 @@
-#ifndef TAP_H
-#define TAP_H
-
 /*
 This file is part of Tap.
 
@@ -17,6 +14,11 @@ This file is part of Tap.
     You should have received a copy of the GNU General Public License
     along with Tap.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef TAP_H
+#define TAP_H
+
+
 
 #include <vector>
 #include <string>

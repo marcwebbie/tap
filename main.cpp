@@ -16,8 +16,8 @@ This file is part of Tap.
 */
 
 #include <iostream>
-#include "Tap.h"
-#include "Tapx.h"
+#include "headers/Tap.h"
+#include "headers/Tapx.h"
 
 using namespace std;
 using mjr::Tap;
