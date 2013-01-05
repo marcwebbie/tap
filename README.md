@@ -8,30 +8,29 @@ Tap is a signed type of arbitrary precision for C++. The goal of this project is
 Examples
 ---------------
 ```cpp
+#include <iostream>
+#include "headers/Tap.h"
+#include "headers/Tapx.h"
 
-    #include <iostream>
-    #include "headers/Tap.h"
-    #include "headers/Tapx.h"
+using mjr::Tap;
 
-    using mjr::Tap;
+int main()
+{
+    Tap a = "8684864688468";
+    Tap b = "646553564656465446545454655465565465454654546556465448461516464655356465644";
+    Tap c = a*b+Tap("123456789123456789123456789");
 
-    int main()
-    {
-        Tap a = "8684864688468";
-        Tap b = "646553564656465446545454655465565465454654546556465448461516464655356465644";
-        Tap c = a*b+Tap("123456789123456789123456789");
-
-        std::cout << c.to_s() << std::endl; // Print c in decimal
-        std::cout << c.to_s(2) << std::endl; // Print c in binary
-        std::cout << c.to_s(36) << std::endl; // Print c in base 36
+    std::cout << c.to_s() << std::endl; // Print c in decimal
+    std::cout << c.to_s(2) << std::endl; // Print c in binary
+    std::cout << c.to_s(36) << std::endl; // Print c in base 36
     
-        if (b > a){
-            std::cout << "b is larger than a" << std::endl;
-        }
-        else {
-            std::cout << "a is larger than b" << std::endl;
-        }
+    if (b > a){
+        std::cout << "b is larger than a" << std::endl;
     }
+    else {
+        std::cout << "a is larger than b" << std::endl;
+    }
+}
 ```
 
 
