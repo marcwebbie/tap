@@ -28,7 +28,7 @@ int main()
     mjr::Tap b = "6465535646564654465454546554655654654546545465564654484615164646553564656";
     mjr::Tap c = a*b + mjr::Tap("123456789123456789123456789");
 
-    std::cout << "a == " << a.to_s() << std::endl; // Print a in decimal
+    std::cout << "a == " << a << std::endl; // Print a in decimal
     std::cout << "b == " << b.to_s() << std::endl << std::endl; // Print b in decimal
 
     std::cout << "c == \n" << c.to_s() << std::endl << std::endl; // Print c in decimal
