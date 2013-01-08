@@ -31,7 +31,7 @@ public:
 private:
     Tapx();
     typedef unsigned char Digit;
-    const unsigned int BASE = (1L<<8);
+    const static unsigned int BASE = (1L<<8);
     std::vector<Digit> data;
 };
 
@@ -120,14 +120,16 @@ Tapx::Tapx(const char* entree, int src_base /*=10*/) :
     while (src.size()){
 
         // Functions
-        unsigned divisor = BASE;
+        //unsigned divisor = BASE;
         vector<unsigned> dividend;
         unsigned remainder = 0;
+        /*
         for(unsigned d : src){
             unsigned e = (d + remainder * src_base) / divisor;
             unsigned remainder = (d + remainder * src_base) % divisor;
             if (dividend.size() || e) dividend.push_back(e);
         }
+        */
         src = dividend;
         result.push_back(remainder);
     }

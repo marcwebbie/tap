@@ -148,7 +148,7 @@ private:
 
 
 }//namespace mjr
-mjr::Tap operator"" _tap(const char* v){return mjr::Tap(v);} // FIXME: find a way to stop this warning
+//mjr::Tap operator"" _tap(const char* v){return mjr::Tap(v);} // FIXME: find a way to stop this warning
 mjr::Tap operator* (const mjr::Tap&, const mjr::Tap&);
 mjr::Tap operator+ (const mjr::Tap&, const mjr::Tap&);
 mjr::Tap operator- (const mjr::Tap&, const mjr::Tap&);
@@ -589,6 +589,7 @@ void Tap::inc1v2()
  *  @brief INCREMENT BY ONE ... performance test
  *  @return Tap&: reference to (this) after operation
 */
+/*
 void Tap::inc1v3()
 {
     pByte p = &data[0];
@@ -621,14 +622,14 @@ void Tap::inc1v3()
 
                 "final:\n\t"                //  end of loop
                 "mov %%edi, %2"
-                :/*no output var*/
+                ://no output var
                 :"m"(p), "m"(SIZE), "m"(k)
                 :"rax", "edi", "edx");
 
     if(k == SIZE) data.push_back(1);
 }
 
-
+*/
 
 Tap Tap::pow(Tap p)
 {
