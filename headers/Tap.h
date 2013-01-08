@@ -57,8 +57,8 @@ public:
 
     // [Managers] %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     int normalize();
-    void resize(size_t nsz, Byte elem='\0') { data.resize(nsz,elem);}
-    void push_back(Byte by){ data.push_back(by); }
+    void resize(size_t nsz, Byte elem='\0') { data.resize(nsz,elem); }
+    void push_back(Byte by) { data.push_back(by); }
     void reinit(Byte by='\0') { data.assign(len(), by); }       // reinit all digits
     // to '\0' by default
 
