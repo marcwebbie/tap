@@ -23,7 +23,6 @@ This file is part of Tap.
 #include <deque>
 
 class Tapx{
-
 public:
     Tapx(const char* entree, int n_base =10);
     //..
