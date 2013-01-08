@@ -25,6 +25,38 @@ This file is part of Tap.
 #include <string>
 
 
+class Convert{
+    typedef unsigned char Byte;
+public:
+    static void to_base_destination(std::vector<Byte> source_digits,
+                                    std::vector<Byte>& destination_digits,
+                                    const int& source_base,
+                                    const int& destination_base)
+    {
+        std::vector<Byte>& result = destination_digits;
+        result.clear(); // make sure that the destination is empty
+        unsigned divisor = destination_base;
+
+        // Convert from src base to dest_base
+        while (source_digits.size()){
+            // division and modulo
+            std::vector<Byte> dividend;
+
+            unsigned remainder_divmod_long = 0;
+
+            for(unsigned digit : source_digits){
+                unsigned e = (digit + remainder_divmod_long * source_base) / divisor;
+                remainder_divmod_long = (digit + remainder_divmod_long * source_base) % divisor;
+                if (dividend.size() || e) dividend.push_back(e);
+            }
+
+            source_digits = dividend;
+            result.push_back(remainder_divmod_long);
+        }
+    }
+};
+
+
 
 class Tapx{
     typedef unsigned char Byte;
@@ -32,58 +64,31 @@ class Tapx{
     std::vector<Byte> data;
 
 public:
-    Tapx(const char* entree);
-    explicit Tapx(const char* entree, int n_base);
-
+    //Tapx(const char* entree);
+    Tapx(const char* entree, int n_base=10);
     std::string to_s(int base=10) const;
 
 private:
     Tapx();
     void normalize();
-    static void convert_base(std::vector<Byte> source_digits,
-                             std::vector<Byte> destination_digits,
-                             int source_base,
-                             int destination_base);
+
 };
 
-
+/*
 Tapx::Tapx(const char* source_string)
 {
     this->data = Tapx(source_string, 10).data;
-}
+}*/
 
-Tapx::Tapx(const char* source_string, int src_base)
-//data(std::ceil(std::strlen(source_string) * (std::log10(src_base) / std::log10(2)) / (std::log10(this->BASE) / std::log10(2))) )// find the number of digits needed
+Tapx::Tapx(const char* source_string, int src_base) :
+    data(std::strlen(source_string) * std::log2(src_base)/8)
 {
-    size_t source_string_size = std::strlen(source_string);
-    data.resize(source_string_size * std::log2(src_base)/8);
-
-    const char* p_source_string = source_string;
-    std::vector<Byte> src_digits(source_string_size);
+    std::vector<Byte> src_digits(std::strlen(source_string));
     for(unsigned i=0; i != src_digits.size(); ++i){
-        src_digits[i] = (*p_source_string++) - '0';
+        src_digits[i] = source_string[i] - '0';
     }
 
-    std::vector<Byte>& result = this->data;
-    unsigned divisor = this->BASE;
-
-    // Convert from src base to dest_base
-    while (src_digits.size()){
-
-        // division and modulo
-        std::vector<Byte> dividend;
-
-        unsigned remainder_divmod_long = 0;
-
-        for(unsigned digit : src_digits){
-            unsigned e = (digit + remainder_divmod_long * src_base) / divisor;
-            remainder_divmod_long = (digit + remainder_divmod_long * src_base) % divisor;
-            if (dividend.size() || e) dividend.push_back(e);
-        }
-
-        src_digits = dividend;
-        result.push_back(remainder_divmod_long);
-    }
+    Convert::to_base_destination(src_digits, this->data, src_base, this->BASE);
 
     this->normalize();
 }
@@ -105,6 +110,7 @@ void Tapx::normalize()
         return ;
     }
 }
+
 
 
 #endif // TAPX_H

@@ -43,6 +43,6 @@ int main()
     }
 
 
-    Tapx x1 = "260";
+    Tapx x1 = "20";
     std::cout << "good" << std::endl;
 }
