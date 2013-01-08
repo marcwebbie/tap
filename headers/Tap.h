@@ -112,9 +112,9 @@ private:
 };
 
 // TODO: Remove this ugly class
-class Bomb{
+class TapConvertionException{
 public:
-    Bomb(const std::string& s) : message(s) {}
+    TapConvertionException(const std::string& s) : message(s) {}
     std::string message;
 };
 
@@ -126,7 +126,7 @@ public:
     {
         std::ostringstream o;
         if (!(o << x))
-            throw Bomb("stringify(T x) stringfy doesn't work with the given type");
+            throw TapConvertionException("The number couldn't be converted into a string");
         return o.str();
     }
 
@@ -148,7 +148,11 @@ private:
 
 
 }//namespace mjr
-//mjr::Tap operator"" _tap(const char* v){return mjr::Tap(v);} // FIXME: find a way to stop this warning
+
+
+// ============
+// Global operators
+// ============
 mjr::Tap operator* (const mjr::Tap&, const mjr::Tap&);
 mjr::Tap operator+ (const mjr::Tap&, const mjr::Tap&);
 mjr::Tap operator- (const mjr::Tap&, const mjr::Tap&);
@@ -547,6 +551,7 @@ Tap& Tap::operator*=(const Tap& t2){
  *  @return Tap&: reference to (this) after operation
  *  This function uses iterators for walking over digits
 */
+/*
 Tap& Tap::inc1()
 {
     iter p = this->begin();
@@ -560,6 +565,7 @@ Tap& Tap::inc1()
 
     return *this;
 }
+*/
 
 
 /// TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
@@ -567,6 +573,7 @@ Tap& Tap::inc1()
  *  @brief INCREMENT BY ONE ... performance test
  *  @return Tap&: reference to (this) after operation
 */
+/*
 void Tap::inc1v2()
 {
     unsigned char* p = &data[0];
@@ -582,7 +589,7 @@ void Tap::inc1v2()
     else
         ++(*p);
 }
-
+*/
 
 /// TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 /**
