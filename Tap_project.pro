@@ -11,5 +11,6 @@ HEADERS += \
 
 OTHER_FILES += \
     README.md \
-    LICENSE.txt
+    LICENSE.txt \
+    tests.txt
 

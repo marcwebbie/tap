@@ -16,196 +16,17 @@
 */
 
 #include <iostream>
-#include <cmath>
+
 #include "headers/Tap.h"
 #include "headers/Tapx.h"
 
-
-/*
-import math
-
-def incNumberByValue(digits, base, value):
-    # The initial overflow is the 'value' to add to the number.
-    overflow = value
-    # Traverse list of digits in reverse order.
-    for i in reversed(xrange(len(digits))):
-        # If there is no overflow we can stop overflow propagation to next higher digit(s).
-        if not overflow:
-            return
-        sum = digits[i] + overflow
-        digits[i] = sum % base
-        overflow = sum / base
-
-
-def multNumberByValue(digits, base, value):
-    overflow = 0
-    # Traverse list of digits in reverse order.
-    for i in reversed(xrange(len(digits))):
-        tmp = (digits[i] * value) + overflow
-        digits[i] = tmp % base
-        overflow = tmp / base
-
-
-def convertNumber(srcDigits, srcBase, destDigits, destBase):
-    for srcDigit in srcDigits:
-        multNumberByValue(destDigits, destBase, srcBase)
-        incNumberByValue(destDigits, destBase, srcDigit)
-
-
-def convertNumberExt(srcDigits, srcBase, destBase):
-    # Generate a list of zero's which is long enough to hold the destination number.
-    destDigits = [0] * int(math.ceil(len(srcDigits)*math.log(srcBase,2)/math.log(destBase,2)))
-    # Do conversion.
-    convertNumber(srcDigits, srcBase, destDigits, destBase)
-    # Return result.
-    return destDigits
-
-sourceNum = [2, 0]
-destNum = convertNumberExt(sourceNum, 10, 16)
-
-print "numero source %s" % sourceNum
-print "numero dest %s" % destNum
-*/
-
-
-// ===========================
-
-typedef unsigned char byte;
-
-
-double logTwo(double num)
-{
-    return std::log10(num) / std::log10(2);
-}
-
-
-void incNumberByValue(std::vector<byte> digits, int base, int value)
-{
-    //# The initial overflow is the 'value' to add to the number.
-    int overflow = value;
-    //# Traverse list of digits in reverse order.
-    for(int i = digits.size()-1; i >= 0; --i){
-        //# If there is no overflow we can stop overflow propagation to next higher digit(s).
-        if (not overflow){
-            return ;
-        }
-        else{
-            int sum = digits[i] + overflow;
-            digits[i] = sum % base;
-            overflow = sum / base;
-        }
-    }
-}
-
-
-void multNumberByValue(std::vector<byte> digits, int base, int value)
-{
-    int overflow = 0;
-
-    /* # Traverse list of digits in reverse order.
-    for i in reversed(xrange(len(digits))):
-        tmp = (digits[i] * value) + overflow
-        digits[i] = tmp % base
-        overflow = tmp / base
-    */
-    for(int i = digits.size()-1; i >= 0; --i){
-        int tmp = (digits[i] * value) + overflow;
-        digits[i] = tmp % base;
-        overflow = tmp / base;
-    }
-}
-
-
-
-void convertNumber(std::vector<byte> srcDigits, int srcBase, std::vector<byte> destDigits, int destBase)
-{
-    // for each srcDigit in srcDigits
-    for(unsigned i =0; i != srcDigits.size(); ++i){
-        // multNumberByValue(destDigits, destBase, srcBase)
-        // incNumberByValue(destDigits, destBase, srcDigit)
-        multNumberByValue(destDigits, destBase, srcBase);
-        incNumberByValue(destDigits, destBase, srcDigits[i]);
-    }
-}
-
-
-
-
-
-
-std::vector<byte> convertNumberExt(std::vector<byte> srcDigits, const int srcBase, const int destBase)
-{
-    // # Generate a list of zero's which is long enough to hold the destination number.
-    // destDigits = [0] * int(math.ceil(len(srcDigits)*math.log(srcBase,2)/math.log(destBase,2)))
-    int sizeNeeded = std::ceil( srcDigits.size() * logTwo(srcBase) / logTwo(destBase) );
-    std::vector<byte> destDigits(sizeNeeded);
-
-    convertNumber(srcDigits, srcBase, destDigits, destBase); // # Do conversion.
-
-    return destDigits; //# Return result.
-}
-// ============================
-using namespace std;
-
-/*
-def divmod_long(src, src_base, divisor):
-    dividend=[]
-    remainder=0
-    for d in src:
-      (e, remainder) = divmod(d + remainder * src_base, divisor)
-      if dividend or e: dividend += [e]
-    return (dividend, remainder)
-
-def convert(src, src_base, dst_base):
-    result = []
-    while src:
-      (src, remainder) = divmod_long(src, src_base, dst_base)
-      result = [remainder] + result
-    return result
-*/
-string convert(std::vector<byte> src_digits, const int src_base, const int dest_base)
-{
-    vector<byte> result;
-    unsigned divisor = dest_base;
-
-    // Convert from src base to dest_base
-    while (src_digits.size()){
-
-        // division and modulo
-        vector<byte> dividend;
-
-        unsigned remainder_divmod_long = 0;
-
-        for(unsigned digit : src_digits){
-            unsigned e = (digit + remainder_divmod_long * src_base) / divisor;
-            remainder_divmod_long = (digit + remainder_divmod_long * src_base) % divisor;
-            if (dividend.size() || e) dividend.push_back(e);
-        }
-
-        src_digits = dividend;
-        result.push_back(remainder_divmod_long);
-    }
-
-    // Convert result into string in reverse order
-    string result_string = "";
-    for(int i = result.size()-1; i >= 0; --i){
-         result_string += char( int('0') + result[i] );
-    }
-
-    return result_string;
-}
-
-
-
-
-using mjr::Tap;
+using namespace mjr;
 
 int main()
 {
-    /*
-    Tap a = "8684864688468";
-    Tap b = "6465535646564654465454546554655654654546545465564654484615164646553564656";
-    Tap c = a*b+Tap("123456789123456789123456789");
+    mjr::Tap a = "8684864688468";
+    mjr::Tap b = "6465535646564654465454546554655654654546545465564654484615164646553564656";
+    mjr::Tap c = a*b + mjr::Tap("123456789123456789123456789");
 
     std::cout << "a == " << a.to_s() << std::endl; // Print a in decimal
     std::cout << "b == " << b.to_s() << std::endl << std::endl; // Print b in decimal
@@ -220,18 +41,8 @@ int main()
     else {
         std::cout << "a is larger than b" << std::endl;
     }
-    */
-
-    vector<byte> sourceNum;
-    sourceNum.push_back(byte(2));
-    sourceNum.push_back(byte(0));
 
 
-    // vector<byte> destNum = Converter.to_byte_array(sourceNum, 10, 2);
-
-
-    cout << convert(sourceNum, 10, 16) << endl;
-    /*for(int i = 0; i < destNum.size(); ++i){
-        cout << destNum[i] << endl;
-    }*/
+    Tapx x1 = "260";
+    std::cout << "good" << std::endl;
 }
