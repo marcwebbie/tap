@@ -20,9 +20,12 @@ int main()
     Tap b = "646553564656465446545454655465565465454654546556465448461516464655356465644";
     Tap c = a*b+Tap("123456789123456789123456789");
 
-    std::cout << c.to_s() << std::endl; // Print c in decimal
-    std::cout << c.to_s(2) << std::endl; // Print c in binary
-    std::cout << c.to_s(36) << std::endl; // Print c in base 36
+    std::cout << "a == " << a.to_s() << std::endl; // Print a in decimal
+    std::cout << "b == " << b.to_s() << std::endl << std::endl; // Print b in decimal
+
+    std::cout << "c == \n" << c.to_s() << std::endl << std::endl; // Print c in decimal
+    std::cout << "c in binary == \n"  << c.to_s(2) << std::endl << std::endl; // Print c in binary
+    std::cout << "c in base 36 == \n" << c.to_s(36) << std::endl << std::endl; // Print c in base 36
     
     if (b > a){
         std::cout << "b is larger than a" << std::endl;
