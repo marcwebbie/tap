@@ -22,6 +22,83 @@ This file is part of Tap.
 #include <vector>
 #include <deque>
 
+
+
+class Converter{
+    typedef unsigned char Byte;
+    Converter(){}
+
+public:
+    static std::vector<Byte> to_byte_array(std::vector<Byte> source_digits, int source_base, int destination_base)
+    {
+        return convertNumberExt(source_digits, source_base, destination_base);
+    }
+
+
+private:
+    static double logTwo(double num)
+    {
+        return std::log10(num) / std::log10(2);
+    }
+
+
+    static void incNumberByValue(std::vector<Byte> digits, int base, int value)
+    {
+        // The initial overflow is the 'value' to add to the number.
+        int overflow = value;
+
+        // Traverse list of digits in reverse order.
+        for(int i = digits.size()-1; i >= 0; --i){
+            // If there is no overflow we can stop overflow propagation to next higher digit(s).
+            if (not overflow){
+                return ;
+            }
+            else{
+                int sum = digits[i] + overflow;
+                digits[i] = sum % base;
+                overflow = sum / base;
+            }
+        }
+    }
+
+
+    static void multNumberByValue(std::vector<Byte> digits, int base, int value)
+    {
+        int overflow = 0;
+
+        for(int i = digits.size()-1; i >= 0; --i){
+            int tmp = (digits[i] * value) + overflow;
+            digits[i] = tmp % base;
+            overflow = tmp / base;
+        }
+    }
+
+
+
+    static void convertNumber(std::vector<Byte> srcDigits, int srcBase, std::vector<Byte> destDigits, int destBase)
+    {
+        // For each srcDigit in srcDigits
+        for(unsigned i =0; i != srcDigits.size(); ++i){
+            multNumberByValue(destDigits, destBase, srcBase);
+            incNumberByValue(destDigits, destBase, srcDigits[i]);
+        }
+    }
+
+
+    static std::vector<Byte> convertNumberExt(std::vector<Byte> srcDigits, const int srcBase, const int destBase)
+    {
+        // # Generate a list of zero's which is long enough to hold the destination number.
+        int sizeNeeded = std::ceil( srcDigits.size() * logTwo(srcBase) / logTwo(destBase) );
+        std::vector<Byte> destDigits(sizeNeeded);
+
+        convertNumber(srcDigits, srcBase, destDigits, destBase); // # Do conversion.
+
+        return destDigits; //# Return result.
+    }
+};
+
+
+
 class Tapx{
 public:
     Tapx(const char* entree, int n_base =10);

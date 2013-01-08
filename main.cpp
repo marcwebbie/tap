@@ -145,13 +145,64 @@ std::vector<byte> convertNumberExt(std::vector<byte> srcDigits, const int srcBas
     return destDigits; //# Return result.
 }
 // ============================
-
-
 using namespace std;
+
+/*
+def divmod_long(src, src_base, divisor):
+    dividend=[]
+    remainder=0
+    for d in src:
+      (e, remainder) = divmod(d + remainder * src_base, divisor)
+      if dividend or e: dividend += [e]
+    return (dividend, remainder)
+
+def convert(src, src_base, dst_base):
+    result = []
+    while src:
+      (src, remainder) = divmod_long(src, src_base, dst_base)
+      result = [remainder] + result
+    return result
+*/
+string convert(std::vector<byte> src_digits, const int src_base, const int dest_base)
+{
+    vector<byte> result;
+    unsigned divisor = dest_base;
+
+    // Convert from src base to dest_base
+    while (src_digits.size()){
+
+        // division and modulo
+        vector<byte> dividend;
+
+        unsigned remainder_divmod_long = 0;
+
+        for(unsigned digit : src_digits){
+            unsigned e = (digit + remainder_divmod_long * src_base) / divisor;
+            remainder_divmod_long = (digit + remainder_divmod_long * src_base) % divisor;
+            if (dividend.size() || e) dividend.push_back(e);
+        }
+
+        src_digits = dividend;
+        result.push_back(remainder_divmod_long);
+    }
+
+    // Convert result into string in reverse order
+    string result_string = "";
+    for(int i = result.size()-1; i >= 0; --i){
+         result_string += char( int('0') + result[i] );
+    }
+
+    return result_string;
+}
+
+
+
+
 using mjr::Tap;
 
 int main()
 {
+    /*
     Tap a = "8684864688468";
     Tap b = "6465535646564654465454546554655654654546545465564654484615164646553564656";
     Tap c = a*b+Tap("123456789123456789123456789");
@@ -169,15 +220,18 @@ int main()
     else {
         std::cout << "a is larger than b" << std::endl;
     }
-
+    */
 
     vector<byte> sourceNum;
     sourceNum.push_back(byte(2));
     sourceNum.push_back(byte(0));
 
-    vector<byte> destNum = convertNumberExt(sourceNum, 10, 16);
 
-    for(int i = 0; i < destNum.size(); ++i){
+    // vector<byte> destNum = Converter.to_byte_array(sourceNum, 10, 2);
+
+
+    cout << convert(sourceNum, 10, 16) << endl;
+    /*for(int i = 0; i < destNum.size(); ++i){
         cout << destNum[i] << endl;
-    }
+    }*/
 }
