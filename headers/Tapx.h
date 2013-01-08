@@ -22,20 +22,28 @@ This file is part of Tap.
 #include <cstring>
 #include <vector>
 #include <deque>
+#include <string>
 
 
 
 class Tapx{
-public:
-    Tapx(const char* entree);
-    explicit Tapx(const char* entree, int n_base);
-    //..
-
-private:
-    Tapx();
     typedef unsigned char Byte;
     const static unsigned int BASE = (1L<<8);
     std::vector<Byte> data;
+
+public:
+    Tapx(const char* entree);
+    explicit Tapx(const char* entree, int n_base);
+
+    std::string to_s(int base=10) const;
+
+private:
+    Tapx();
+    void normalize();
+    static void convert_base(std::vector<Byte> source_digits,
+                             std::vector<Byte> destination_digits,
+                             int source_base,
+                             int destination_base);
 };
 
 
@@ -45,7 +53,7 @@ Tapx::Tapx(const char* source_string)
 }
 
 Tapx::Tapx(const char* source_string, int src_base)
-    //data(std::ceil(std::strlen(source_string) * (std::log10(src_base) / std::log10(2)) / (std::log10(this->BASE) / std::log10(2))) )// find the number of digits needed
+//data(std::ceil(std::strlen(source_string) * (std::log10(src_base) / std::log10(2)) / (std::log10(this->BASE) / std::log10(2))) )// find the number of digits needed
 {
     size_t source_string_size = std::strlen(source_string);
     data.resize(source_string_size * std::log2(src_base)/8);
@@ -76,8 +84,27 @@ Tapx::Tapx(const char* source_string, int src_base)
         src_digits = dividend;
         result.push_back(remainder_divmod_long);
     }
+
+    this->normalize();
 }
 
+
+void Tapx::normalize()
+{
+    size_t i = 0;
+
+    while( this->data[i] == 0 ) {
+        ++i;
+    }
+
+    // if zeroes were found ahead number
+    if(i > 0){
+        this->data = std::vector<Byte>(this->data.begin()+i, this->data.end());
+    }
+    else{
+        return ;
+    }
+}
 
 
 #endif // TAPX_H
