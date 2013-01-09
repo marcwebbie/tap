@@ -57,7 +57,25 @@ public:
             result.push_back(remainder_divmod_long);
         }
     }
+
+    static std::string to_string_base(std::vector<Byte> source_digits,
+                                      std::vector<Byte> destination_vector,
+                                      const int& source_base,
+                                      const int& base_for_string)
+    {
+        Converter::to_base_destination(source_digits, destination_vector, source_base, base_for_string);
+
+        static const char* digit_table = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        std::string string_final = "";
+
+        for (size_t i = 0; i < destination_vector.size(); ++i) {
+            string_final = digit_table[destination_vector[i]] + string_final;
+        }
+
+        return string_final;
+    }
 };
+
 
 
 // Tapx Class
@@ -67,16 +85,53 @@ class Tapx{
     const static unsigned int BASE = (1L<<8);
 
 public:
+    Tapx();
     Tapx(const char* entree, int n_base=10);
     std::string to_s(int base_to_print=10) const;
+    size_t len() const;
 
 private:
-    Tapx();
     void normalize();
+
+    // Friend operators section
+    friend Tapx operator+ (const Tapx& x, const Tapx& y);
 
     // Data section
     std::vector<Byte> data;
 };
+
+
+
+// Global Operators
+// ===============================================>
+Tapx operator+ (const Tapx& x, const Tapx& y)
+{
+    size_t x_size = x.len();
+    Tapx result_tapx;
+    result_tapx.data.resize(x_size);
+
+    // Sum computing
+    unsigned int carry = 0;
+    for (size_t i = 0; i < x_size; ++i) {
+        carry = (x.data[i] + y.data[i] + carry);
+        result_tapx.data[i] = carry % Tapx::BASE;
+        carry /= Tapx::BASE;
+    }
+    if(carry) {
+        result_tapx.data.resize(x_size+1, carry);
+    }
+
+    return result_tapx;
+}
+
+
+
+Tapx::Tapx() :
+    data(0)
+{
+    //this->data[0] = 0;
+}
+
 
 
 Tapx::Tapx(const char* source_string, int src_base) :
@@ -93,10 +148,14 @@ Tapx::Tapx(const char* source_string, int src_base) :
 }
 
 
+
 // Return a string representation of the instance in the chosen base
 std::string Tapx::to_s(int base_to_print) const
 {
     std::vector<Byte> string_vector;
+    return Converter::to_string_base(this->data, string_vector, this->BASE, base_to_print);
+
+    /*
     Converter::to_base_destination(this->data, string_vector, this->BASE, base_to_print);
 
     static const char* digit_table = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -107,7 +166,16 @@ std::string Tapx::to_s(int base_to_print) const
     }
 
     return string_final;
+    */
 }
+
+
+
+inline size_t Tapx::len() const
+{
+    return this->data.size();
+}
+
 
 
 void Tapx::normalize()

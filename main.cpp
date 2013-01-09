@@ -41,6 +41,11 @@ int main()
     }
 
 
-    Tapx x1 = "254442325322432423";
-    std::cout << x1.to_s(2) << std::endl;
+    Tapx x1 = "2";
+    Tapx x2 = "30";
+    Tapx x3 = x1+x2;
+    std::cout << x3.to_s() << std::endl;
+    std::cout << x3.to_s(2) << std::endl;
+    std::cout << x3.to_s(16) << std::endl;
+    std::cout << x3.to_s(36) << std::endl;
 }
