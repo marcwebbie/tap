@@ -20,8 +20,6 @@
 #include "headers/Tap.h"
 #include "headers/Tapx.h"
 
-using namespace mjr;
-
 int main()
 {
     mjr::Tap a = "8684864688468";
@@ -43,6 +41,6 @@ int main()
     }
 
 
-    Tapx x1 = "20";
-    std::cout << "good" << std::endl;
+    Tapx x1 = "254442325322432423";
+    std::cout << x1.to_s(2) << std::endl;
 }
