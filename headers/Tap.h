@@ -771,16 +771,19 @@ mjr::Tap operator* (const mjr::Tap& x, const mjr::Tap& y)
     unsigned i, j, carryout = 0;
     for (i = 0; i < n; i++) {
         unsigned carry = 0;
+
         for (j = 0; j < m; j++) {
             carry += x[i]*y[j] + z[i+j];
             z[i+j] = carry%myBASE;
             carry /= myBASE;
         }
+
         for ( ; j < n + m - i; j++) {
             carry += z[i+j];
             z[i+j] = carry%myBASE;
             carry /= myBASE;
         }
+
         carryout |= carry;
     }
     if(carryout)

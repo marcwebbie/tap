@@ -43,8 +43,8 @@ int main()
 
     Tapx x1 = "2";
     Tapx x2 = "30";
-    Tapx x3 = x1+x2;
-    std::cout << x3.to_s() << std::endl;
+    Tapx x3 = x1*x2;
+    std::cout << "X3 == " << x3.to_s() << std::endl;
     std::cout << x3.to_s(2) << std::endl;
     std::cout << x3.to_s(16) << std::endl;
     std::cout << x3.to_s(36) << std::endl;

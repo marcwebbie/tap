@@ -77,7 +77,6 @@ public:
 };
 
 
-
 // Tapx Class
 // ===============================================>
 class Tapx{
@@ -92,50 +91,26 @@ public:
 
 private:
     void normalize();
-
-    // Friend operators section
     friend Tapx operator+ (const Tapx& x, const Tapx& y);
+    friend Tapx operator* (const Tapx& x, const Tapx& y);
 
     // Data section
     std::vector<Byte> data;
 };
 
 
-
-// Global Operators
+// Tapx member functions implementation
 // ===============================================>
-Tapx operator+ (const Tapx& x, const Tapx& y)
-{
-    size_t x_size = x.len();
-    Tapx result_tapx;
-    result_tapx.data.resize(x_size);
 
-    // Sum computing
-    unsigned int carry = 0;
-    for (size_t i = 0; i < x_size; ++i) {
-        carry = (x.data[i] + y.data[i] + carry);
-        result_tapx.data[i] = carry % Tapx::BASE;
-        carry /= Tapx::BASE;
-    }
-    if(carry) {
-        result_tapx.data.resize(x_size+1, carry);
-    }
-
-    return result_tapx;
-}
-
-
-
-Tapx::Tapx() :
+Tapx::Tapx () :
     data(0)
 {
     //this->data[0] = 0;
 }
 
 
-
-Tapx::Tapx(const char* source_string, int src_base) :
-    data(std::strlen(source_string) * std::log2(src_base)/8)
+Tapx::Tapx (const char* source_string, int src_base) :
+    data (std::strlen(source_string) * std::log2(src_base)/8)
 {
     std::vector<Byte> src_digits(std::strlen(source_string));
     for (unsigned i=0; i != src_digits.size(); ++i) {
@@ -148,14 +123,12 @@ Tapx::Tapx(const char* source_string, int src_base) :
 }
 
 
-
 // Return a string representation of the instance in the chosen base
-std::string Tapx::to_s(int base_to_print) const
+std::string Tapx::to_s (int base_to_print) const
 {
     std::vector<Byte> string_vector;
-    return Converter::to_string_base(this->data, string_vector, this->BASE, base_to_print);
+    //return Converter::to_string_base(this->data, string_vector, this->BASE, base_to_print);
 
-    /*
     Converter::to_base_destination(this->data, string_vector, this->BASE, base_to_print);
 
     static const char* digit_table = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -166,16 +139,13 @@ std::string Tapx::to_s(int base_to_print) const
     }
 
     return string_final;
-    */
 }
-
 
 
 inline size_t Tapx::len() const
 {
     return this->data.size();
 }
-
 
 
 void Tapx::normalize()
@@ -193,6 +163,75 @@ void Tapx::normalize()
     else {
         return ;
     }
+}
+
+
+// Global Operators
+// ===============================================>
+Tapx operator+ (const Tapx& x, const Tapx& y)
+{
+    size_t x_size = x.len();
+    Tapx result_tapx;
+    result_tapx.data.resize(x_size);
+
+    // Sum computing
+    unsigned int carry = 0;
+    for (size_t i = 0; i < x_size; ++i) {
+        carry = (x.data[i] + y.data[i] + carry);
+        result_tapx.data[i] = carry % Tapx::BASE;
+        carry /= Tapx::BASE;
+    }
+    if (carry) {
+        result_tapx.data.resize(x_size+1, carry);
+    }
+
+    return result_tapx;
+}
+
+
+Tapx operator* (const Tapx& x, const Tapx& y)
+{
+    unsigned x_size = x.len(), y_size = y.len();
+
+    /*
+    assert(n);
+    assert(m);
+    //if( (n+m+1) <= int(sizeof(ULL)))   // if possible do a Built-in calculation
+    //  return x.to_ul()*y.to_ul();
+
+    if(y.len() > x.len())
+        return y*x;
+
+    */
+
+    Tapx z;
+    z.data.resize(x_size + y_size);
+
+    unsigned carryout = 0;
+
+    for (unsigned i = 0; i < x_size; i++) {
+
+        unsigned carry = 0;
+        unsigned j = 0;
+        for (; j < y_size; j++) {
+            carry += x.data[i]*y.data[j] + z.data[i+j];
+            z.data[i+j] = carry%Tapx::BASE;
+            carry /= myBASE;
+        }
+
+        for ( ; j < (x_size + y_size) - i; j++) {
+            carry += z.data[i+j];
+            z.data[i+j] = carry%Tapx::BASE;
+            carry /= Tapx::BASE;
+        }
+        carryout |= carry;
+    }
+    if (carryout){
+        z.data[z.len()] = 1;             // add the carry that spilled out
+    }
+
+    z.normalize();
+    return z;
 }
 
 
