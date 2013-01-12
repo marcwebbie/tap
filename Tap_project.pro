@@ -1,7 +1,7 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
-//QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += main.cpp
 
@@ -11,5 +11,6 @@ HEADERS += \
 
 OTHER_FILES += \
     README.md \
-    LICENSE.txt
+    LICENSE.txt \
+    tests.txt
 

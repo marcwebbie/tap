@@ -111,7 +111,7 @@ private:
     //..
 };
 
-// TODO: Remove this ugly class
+
 class TapConvertionException{
 public:
     TapConvertionException(const std::string& s) : message(s) {}
@@ -162,7 +162,7 @@ bool operator> (const mjr::Tap&, const mjr::Tap&);
 bool operator< (const mjr::Tap&, const mjr::Tap&);
 bool operator== (const mjr::Tap&, const mjr::Tap&);
 bool operator!= (const mjr::Tap&, const mjr::Tap&);
-//std::ostream& operator<<(); // TODO: Implement this
+std::ostream& operator<<(std::ostream& os, const mjr::Tap& tap_number);
 
 
 //TODO: test if this functions are faster and implement it
@@ -771,16 +771,19 @@ mjr::Tap operator* (const mjr::Tap& x, const mjr::Tap& y)
     unsigned i, j, carryout = 0;
     for (i = 0; i < n; i++) {
         unsigned carry = 0;
+
         for (j = 0; j < m; j++) {
             carry += x[i]*y[j] + z[i+j];
             z[i+j] = carry%myBASE;
             carry /= myBASE;
         }
+
         for ( ; j < n + m - i; j++) {
             carry += z[i+j];
             z[i+j] = carry%myBASE;
             carry /= myBASE;
         }
+
         carryout |= carry;
     }
     if(carryout)
@@ -1074,6 +1077,12 @@ bool is_equal(const mjr::Tap& a, const mjr::Tap& b)            /// @test @compat
     return true;
 }
 
+
+std::ostream& operator<<(std::ostream& os, const mjr::Tap& tap_number)
+{
+    os << tap_number.to_s();
+    return os;
+}
 
 
 

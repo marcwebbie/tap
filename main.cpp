@@ -16,19 +16,17 @@
 */
 
 #include <iostream>
+
 #include "headers/Tap.h"
 #include "headers/Tapx.h"
 
-using namespace std;
-using mjr::Tap;
-
 int main()
 {
-    Tap a = "8684864688468";
-    Tap b = "6465535646564654465454546554655654654546545465564654484615164646553564656";
-    Tap c = a*b+Tap("123456789123456789123456789");
+    mjr::Tap a = "8684864688468";
+    mjr::Tap b = "6465535646564654465454546554655654654546545465564654484615164646553564656";
+    mjr::Tap c = a*b + mjr::Tap("123456789123456789123456789");
 
-    std::cout << "a == " << a.to_s() << std::endl; // Print a in decimal
+    std::cout << "a == " << a << std::endl; // Print a in decimal
     std::cout << "b == " << b.to_s() << std::endl << std::endl; // Print b in decimal
 
     std::cout << "c == \n" << c.to_s() << std::endl << std::endl; // Print c in decimal
@@ -41,4 +39,13 @@ int main()
     else {
         std::cout << "a is larger than b" << std::endl;
     }
+
+
+    Tapx x1 = "2";
+    Tapx x2 = "30";
+    Tapx x3 = x1*x2;
+    std::cout << "X3 == " << x3.to_s() << std::endl;
+    std::cout << x3.to_s(2) << std::endl;
+    std::cout << x3.to_s(16) << std::endl;
+    std::cout << x3.to_s(36) << std::endl;
 }
