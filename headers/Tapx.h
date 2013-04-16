@@ -150,6 +150,7 @@ inline size_t Tapx::len() const
 
 void Tapx::normalize()
 {
+    /*
     size_t i = 0;
 
     while( this->data[i] == 0 ) {
@@ -163,6 +164,7 @@ void Tapx::normalize()
     else {
         return ;
     }
+    */
 }
 
 
