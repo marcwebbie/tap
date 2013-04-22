@@ -22,8 +22,8 @@
 
 int main()
 {
-    mjr::Tap a = "8684864688468";
-    mjr::Tap b = "6465535646564654465454546554655654654546545465564654484615164646553564656";
+    mjr::Tap a = "260";
+    mjr::Tap b = "300";
     mjr::Tap c = a*b + mjr::Tap("123456789123456789123456789");
 
     std::cout << "a == " << a << std::endl; // Print a in decimal
@@ -43,9 +43,11 @@ int main()
 
     Tapx x1 = "2";
     Tapx x2 = "30";
-    Tapx x3 = x1*x2;
-    std::cout << "X3 == " << x3.to_s() << std::endl;
-    std::cout << x3.to_s(2) << std::endl;
-    std::cout << x3.to_s(16) << std::endl;
-    std::cout << x3.to_s(36) << std::endl;
+    std::cout << "X2 == " << x2.to_s() << std::endl;
+
+//    Tapx x3 = x1*x2;
+//    std::cout << "X3 == " << x3.to_s() << std::endl;
+//    std::cout << x3.to_s(2) << std::endl;
+//    std::cout << x3.to_s(16) << std::endl;
+//    std::cout << x3.to_s(36) << std::endl;
 }

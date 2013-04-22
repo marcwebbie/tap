@@ -748,12 +748,6 @@ int Tap::diff(int y){                              //
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 using mjr::myBASE;
 
-/**
- *  @brief Operator '*' → Multiply x by y
- *  @param const Tap& x:
- *  @param const Tap& y:
- *  @return Tap: result of operation x*y
-*/
 mjr::Tap operator* (const mjr::Tap& x, const mjr::Tap& y)
 {
     unsigned n = x.len(), m = y.len();
@@ -997,16 +991,7 @@ mjr::Tap addv2(const mjr::Tap& x, const mjr::Tap& y)
     return "0";
 }
 
-
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-// → [COMPARATION OPERATORS]
-// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-/**
- *  @brief Check if a > b
- *  @param const Tap& a:
- *  @param const Tap& b:
- *  @return bool: true if a > b
-*/
+// [COMPARATION OPERATORS]
 bool operator> (const mjr::Tap& a, const mjr::Tap& b){
     int a_sz = a.len(); int b_sz = b.len();
     if(a_sz > b_sz) return true;
@@ -1020,12 +1005,6 @@ bool operator> (const mjr::Tap& a, const mjr::Tap& b){
 }
 
 
-/**
- *  @brief Check if a < b
- *  @param const Tap& a:
- *  @param const Tap& b:
- *  @return bool: true if a < b
-*/
 bool operator< (const mjr::Tap& a, const mjr::Tap& b){
     int a_sz = a.len(); int b_sz = b.len();
     if(a_sz < b_sz) return true;
@@ -1038,12 +1017,6 @@ bool operator< (const mjr::Tap& a, const mjr::Tap& b){
 }
 
 
-/**
- *  @brief Check if a == b
- *  @param const Tap& a:
- *  @param const Tap& b:
- *  @return bool: true if a == b
-*/
 bool operator==(const mjr::Tap& a, const mjr::Tap& b){
     if(a.len() != b.len()) return false;
     mjr::cpByte pa = a.to_rarr();
@@ -1055,26 +1028,8 @@ bool operator==(const mjr::Tap& a, const mjr::Tap& b){
 }
 
 
-/**
- *  @brief Check if a != b
- *  @param const Tap& a:
- *  @param const Tap& b:
- *  @return bool: true if a != b, false otherwise
-*/
 bool operator!=(const mjr::Tap& a, const mjr::Tap& b){
     return !(a==b);
-}
-
-
-/// TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-bool is_equal(const mjr::Tap& a, const mjr::Tap& b)            /// @test @compat
-{
-    int a_sz = a.len(); int b_sz = b.len();
-    if(a_sz != b_sz) return false;
-    while(--a_sz >= 0){     // in case both have the same size
-        if(a[a_sz] != b[a_sz]) return false;
-    }
-    return true;
 }
 
 

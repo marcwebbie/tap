@@ -41,16 +41,18 @@ public:
         unsigned divisor = destination_base;
 
         // Convert from src base to dest_base
-        while (source_digits.size()){
+        while (source_digits.size()) {
             // division and modulo
             std::vector<Byte> dividend;
 
             unsigned remainder_divmod_long = 0;
 
-            for(unsigned digit : source_digits) {
+            for (unsigned digit : source_digits) {
                 unsigned e = (digit + remainder_divmod_long * source_base) / divisor;
                 remainder_divmod_long = (digit + remainder_divmod_long * source_base) % divisor;
-                if (dividend.size() || e) dividend.push_back(e);
+                if (dividend.size() || e) {
+                    dividend.push_back(e);
+                }
             }
 
             source_digits = dividend;
@@ -58,12 +60,12 @@ public:
         }
     }
 
-    static std::string to_string_base(std::vector<Byte> source_digits,
+    static std::string to_string_base(std::vector<Byte> source_vector,
                                       std::vector<Byte> destination_vector,
                                       const int& source_base,
-                                      const int& base_for_string)
+                                      const int& destination_base)
     {
-        Converter::to_base_destination(source_digits, destination_vector, source_base, base_for_string);
+        Converter::to_base_destination(source_vector, destination_vector, source_base, destination_base);
 
         static const char* digit_table = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         std::string string_final = "";
@@ -77,7 +79,78 @@ public:
 };
 
 
-// Tapx Class
+// Base converter using a template namespace
+namespace Convert
+{
+    template<typename Digit_List>
+    void incNumberByValue(Digit_List& digits, const int& base, const int& value)
+    {
+        // The initial overflow is the 'value' to add to the number.
+        int overflow = value;
+        int sum = 0;
+
+        // Traverse list of digits in reverse order.
+        for(size_t i=0; i < digits.size(); ++i) {
+            //for(int i=digits.size()-1; i >= 0; --i) {
+            // If there is no overflow we can stop overflow propagation to next higher digit(s).
+            if (not overflow){
+                return ;
+            }
+            else{
+                sum = digits[i] + overflow;
+                digits[i] = sum % base;
+                overflow = sum / base;
+            }
+        }
+    }
+
+    template<typename Digit_List>
+    static void multNumberByValue(Digit_List& digits, const int& base, const int& value)
+    {
+        int overflow = 0;
+        int tmp = 0;
+
+        // Traverse list of digits in reverse order
+        for(size_t i=0; i < digits.size(); ++i) {
+            //for(int i=digits.size()-1; i >= 0; --i) {
+            tmp = (digits[i] * value) + overflow;
+            digits[i] = tmp % base;
+            overflow = tmp / base;
+        }
+    }
+
+    template<typename Digit_List>
+    void convertNumber(Digit_List& srcDigits, const int& srcBase, Digit_List& destDigits, const int& destBase)
+    {
+        for(int i=srcDigits.size()-1; i >= 0; --i) {
+            //for (int srcDigit : srcDigits){
+            multNumberByValue(destDigits, destBase, srcBase);
+            incNumberByValue(destDigits, destBase, srcDigits[i]);
+        }
+    }
+
+    template<typename Digit_List>
+    void convertNumberExt(Digit_List& srcDigits, Digit_List& destDigits, const int& srcBase, const int& destBase)
+    {
+        // Generate a list of zero's which is long enough to hold the destination number.
+        size_t destSize = int(ceil(srcDigits.size()*log2(srcBase)/log2(destBase)));
+        if (destSize != destDigits.size()){
+            destDigits.resize(destSize);
+        }
+
+        // Make sure that destDigits is empty
+        destDigits.clear();
+
+        // Do conversion.
+        convertNumber(srcDigits, srcBase, destDigits, destBase);
+
+        // Return result.
+        //return destDigits;
+    }
+}
+
+
+// Tapx Interface
 // ===============================================>
 class Tapx{
     typedef unsigned char Byte;
@@ -101,14 +174,10 @@ private:
 
 // Tapx member functions implementation
 // ===============================================>
+Tapx::Tapx () : data(0)
+{}
 
-Tapx::Tapx () :
-    data(0)
-{
-    //this->data[0] = 0;
-}
-
-
+/* BACKUP
 Tapx::Tapx (const char* source_string, int src_base) :
     data (std::strlen(source_string) * std::log2(src_base)/8)
 {
@@ -121,24 +190,45 @@ Tapx::Tapx (const char* source_string, int src_base) :
 
     this->normalize();
 }
+*/
+
+Tapx::Tapx (const char* source_string, int src_base) :
+    data (std::strlen(source_string) * std::log2(src_base)/8)
+{
+
+    // Build a vector of bytes from a source string
+    std::vector<Byte> src_digits(std::strlen(source_string));
+    for (unsigned i=0; i != src_digits.size(); ++i) {
+        src_digits[i] = source_string[i] - '0';
+    }
+
+    Convert::convertNumber(src_digits, src_base, this->data, BASE);
+}
+
 
 
 // Return a string representation of the instance in the chosen base
+/* BACKUP
 std::string Tapx::to_s (int base_to_print) const
 {
-    std::vector<Byte> string_vector;
-    //return Converter::to_string_base(this->data, string_vector, this->BASE, base_to_print);
+    std::vector<Byte> result_vector;
+    return Converter::to_string_base(this->data, result_vector, this->BASE, base_to_print);
+}
+*/
+std::string Tapx::to_s (int base_to_print) const
+{
+    std::vector<Byte> source_vector = this->data;
+    std::vector<Byte> result_vector;
+    Convert::convertNumberExt(source_vector, result_vector, this->BASE, base_to_print);
 
-    Converter::to_base_destination(this->data, string_vector, this->BASE, base_to_print);
-
-    static const char* digit_table = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    std::string string_final = "";
-
-    for (size_t i = 0; i < string_vector.size(); ++i) {
-        string_final = digit_table[string_vector[i]] + string_final;
+    // build string from converted result vector
+    // TODO: Too slow
+    std::string dest_string = "";
+    for (unsigned i=0; i != result_vector.size(); ++i) {
+        dest_string += result_vector[i] - '0';
     }
 
-    return string_final;
+    return dest_string;
 }
 
 
@@ -150,7 +240,6 @@ inline size_t Tapx::len() const
 
 void Tapx::normalize()
 {
-    /*
     size_t i = 0;
 
     while( this->data[i] == 0 ) {
@@ -164,7 +253,6 @@ void Tapx::normalize()
     else {
         return ;
     }
-    */
 }
 
 
@@ -194,17 +282,6 @@ Tapx operator+ (const Tapx& x, const Tapx& y)
 Tapx operator* (const Tapx& x, const Tapx& y)
 {
     unsigned x_size = x.len(), y_size = y.len();
-
-    /*
-    assert(n);
-    assert(m);
-    //if( (n+m+1) <= int(sizeof(ULL)))   // if possible do a Built-in calculation
-    //  return x.to_ul()*y.to_ul();
-
-    if(y.len() > x.len())
-        return y*x;
-
-    */
 
     Tapx z;
     z.data.resize(x_size + y_size);
