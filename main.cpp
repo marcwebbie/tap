@@ -3,7 +3,7 @@
 #include "headers/Tap.h"
 #include "headers/Tapx.h"
 
-using namespace mjr;
+using namespace mw;
 using namespace std;
 
 int main()
