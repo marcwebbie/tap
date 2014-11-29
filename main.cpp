@@ -1,7 +1,6 @@
 #include <iostream>
 
-#include "headers/Tap.h"
-#include "headers/Tapx.h"
+#include "tap.h"
 
 using namespace mw;
 using namespace std;
