@@ -2,7 +2,6 @@
 #define TAP_H
 
 
-
 #include <vector>
 #include <string>
 #include <cmath>
