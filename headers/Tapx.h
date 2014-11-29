@@ -177,21 +177,6 @@ private:
 Tapx::Tapx () : data(0)
 {}
 
-/* BACKUP
-Tapx::Tapx (const char* source_string, int src_base) :
-    data (std::strlen(source_string) * std::log2(src_base)/8)
-{
-    std::vector<Byte> src_digits(std::strlen(source_string));
-    for (unsigned i=0; i != src_digits.size(); ++i) {
-        src_digits[i] = source_string[i] - '0';
-    }
-
-    Converter::to_base_destination(src_digits, this->data, src_base, this->BASE);
-
-    this->normalize();
-}
-*/
-
 Tapx::Tapx (const char* source_string, int src_base) :
     data (std::strlen(source_string) * std::log2(src_base)/8)
 {
@@ -208,13 +193,6 @@ Tapx::Tapx (const char* source_string, int src_base) :
 
 
 // Return a string representation of the instance in the chosen base
-/* BACKUP
-std::string Tapx::to_s (int base_to_print) const
-{
-    std::vector<Byte> result_vector;
-    return Converter::to_string_base(this->data, result_vector, this->BASE, base_to_print);
-}
-*/
 std::string Tapx::to_s (int base_to_print) const
 {
     std::vector<Byte> source_vector = this->data;
