@@ -1,20 +1,37 @@
-# C++ objects and libs
-
+# Compiled Object files
 *.slo
 *.lo
 *.o
-*.a
-*.la
-*.lai
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
 *.so
-*.dll
 *.dylib
+*.dll
 
-# Qt-es
+# Fortran module files
+*.mod
 
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Qt
 *.pro.user
 *.pro.user.*
 moc_*.cpp
 qrc_*.cpp
-Makefile
 *-build-*
+
+*.DS_store
