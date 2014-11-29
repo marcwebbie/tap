@@ -20,34 +20,16 @@
 #include "headers/Tap.h"
 #include "headers/Tapx.h"
 
+using namespace mjr;
+using namespace std;
+
 int main()
 {
-    mjr::Tap a = "260";
-    mjr::Tap b = "300";
-    mjr::Tap c = a*b + mjr::Tap("123456789123456789123456789");
+    Tap a = "260";
+    Tap b = "300";
+    Tap c = a * b;
 
-    std::cout << "a == " << a << std::endl; // Print a in decimal
-    std::cout << "b == " << b.to_s() << std::endl << std::endl; // Print b in decimal
-
-    std::cout << "c == \n" << c.to_s() << std::endl << std::endl; // Print c in decimal
-    std::cout << "c in binary == \n"  << c.to_s(2) << std::endl << std::endl; // Print c in binary
-    std::cout << "c in base 36 == \n" << c.to_s(36) << std::endl << std::endl; // Print c in base 36
-
-    if (b > a){
-        std::cout << "b is larger than a" << std::endl;
-    }
-    else {
-        std::cout << "a is larger than b" << std::endl;
-    }
-
-
-    Tapx x1 = "2";
-    Tapx x2 = "30";
-    std::cout << "X2 == " << x2.to_s() << std::endl;
-
-//    Tapx x3 = x1*x2;
-//    std::cout << "X3 == " << x3.to_s() << std::endl;
-//    std::cout << x3.to_s(2) << std::endl;
-//    std::cout << x3.to_s(16) << std::endl;
-//    std::cout << x3.to_s(36) << std::endl;
+    cout << "a == " << a << endl; // Print a in decimal
+    cout << "b == " << b << endl; // Print b in decimal
+    cout << "c == " << c << endl; // Print c in decimal
 }
